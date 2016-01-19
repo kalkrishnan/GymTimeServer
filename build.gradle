@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.1.RELEASE")
+    }
+}
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.5
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jersey")
+     compile("org.springframework:spring-jdbc")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("com.google.code.gson:gson:2.3.1")
+    compile("org.apache.httpcomponents:httpclient:4.4")
+    compile("org.jsoup:jsoup:1.7.2")
+    compile("com.h2database:h2")
+    // end::jetty[]
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    // HSQLDB for embedded database support
+    compile 'org.hsqldb:hsqldb'
+    // Utilities
+    compile 'com.google.guava:guava:18.0'
+    // AssertJ
+    testCompile 'org.assertj:assertj-core:1.7.0'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
