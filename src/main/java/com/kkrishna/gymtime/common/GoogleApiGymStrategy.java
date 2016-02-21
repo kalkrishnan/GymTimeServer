@@ -1,6 +1,8 @@
 package com.kkrishna.gymtime.common;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	@Autowired
 	private GymTimeHttpClient httpClient;
 
-	public Gym searchGyms(String location) {
+	public List<Gym> searchGyms(String location) {
 		try {
 			String url = apiUrl + location + "+gym" + "&key=" + apiKey;
 			return parseGyms(httpClient.getResponse(url));
@@ -40,22 +42,26 @@ public class GoogleApiGymStrategy implements GymStrategy {
 		return null;
 	}
 
-	private Gym parseGyms(String response) {
+	private List<Gym> parseGyms(String response) {
 		JsonElement jelement = new JsonParser().parse(response);
 		JsonObject jobject = jelement.getAsJsonObject();
 		JsonArray jarray = jobject.getAsJsonArray("results");
-
+		List<Gym> gyms = new ArrayList<Gym>();
 		for (JsonElement jsonElement : jarray) {
 
 			jobject = jsonElement.getAsJsonObject();
-			String address = jobject.get("formatted_address").toString().replace("\"", "");
-			JsonObject locationObject = jobject.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-			String id = locationObject.get("lat").getAsString() + "|" + locationObject.get("lng").getAsString();
-			String name = jobject.get("name").toString().replace("\"", "");
-			return new Gym(id, name, address, null);
+			gyms.add(parseGym(jobject));
 
 		}
-		return null;
+		return gyms;
+	}
+
+	private Gym parseGym(JsonObject gymJson) {
+		String address = gymJson.get("formatted_address").toString().replace("\"", "");
+		JsonObject locationObject = gymJson.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+		String id = locationObject.get("lat").getAsString() + "|" + locationObject.get("lng").getAsString();
+		String name = gymJson.get("name").toString().replace("\"", "");
+		return new Gym(id, name, address, new ArrayList<Traffic>());
 	}
 
 }
