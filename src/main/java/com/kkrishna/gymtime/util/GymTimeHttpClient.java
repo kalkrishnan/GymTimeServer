@@ -25,7 +25,7 @@ public class GymTimeHttpClient {
 	}
 
 	public String getResponse(String URL) throws ClientProtocolException, IOException {
-		HttpGet httpget = new HttpGet(URL);
+		HttpGet httpget = new HttpGet(URL.replace(" ", "%20"));
 		ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
 			public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {

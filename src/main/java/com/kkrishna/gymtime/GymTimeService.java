@@ -59,4 +59,6 @@ public class GymTimeService {
 		int count = jdbcTemplate.queryForObject(countScript, Integer.class);
 		return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(count).build();
 	}
+	
+
 }

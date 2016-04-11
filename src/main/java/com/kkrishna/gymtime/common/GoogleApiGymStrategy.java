@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kkrishna.gymtime.dao.GeneralTraffic;
 import com.kkrishna.gymtime.dao.Gym;
 import com.kkrishna.gymtime.dao.Traffic;
 import com.kkrishna.gymtime.util.GymTimeHttpClient;
@@ -43,6 +44,7 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	}
 
 	private List<Gym> parseGyms(String response) {
+		System.out.println(response);
 		JsonElement jelement = new JsonParser().parse(response);
 		JsonObject jobject = jelement.getAsJsonObject();
 		JsonArray jarray = jobject.getAsJsonArray("results");
@@ -57,11 +59,20 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	}
 
 	private Gym parseGym(JsonObject gymJson) {
-		String address = gymJson.get("formatted_address").toString().replace("\"", "");
+		String address = gymJson.get("formatted_address").toString().replace("\"", "").replace(", United States", "");
 		JsonObject locationObject = gymJson.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-		String id = locationObject.get("lat").getAsString() + "|" + locationObject.get("lng").getAsString();
+		String id = locationObject.get("lat").getAsString() + "_" + locationObject.get("lng").getAsString();
 		String name = gymJson.get("name").toString().replace("\"", "");
-		return new Gym(id, name, address, new ArrayList<Traffic>());
+		return new Gym(id, name, address, new ArrayList<Traffic>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1056301818528097868L;
+
+			{
+				add(new GeneralTraffic(0.6));
+			}
+		});
 	}
 
 }
