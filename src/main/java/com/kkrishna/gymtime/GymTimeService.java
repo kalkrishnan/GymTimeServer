@@ -48,7 +48,8 @@ public class GymTimeService {
 	@Produces("application/json")
 	public Response checkIn(@QueryParam("gym") String gymId, @QueryParam("traffic") String traffic) {
 
-		String createTableScript = "CREATE TABLE IF NOT EXISTS GYM_" + gymId + "(TRAFFIC VARCHAR(255), EXPIRY TIMESTAMP)";
+		String createTableScript = "CREATE TABLE IF NOT EXISTS GYM_" + gymId
+				+ "(TRAFFIC VARCHAR(255), EXPIRY TIMESTAMP)";
 		jdbcTemplate.execute(createTableScript);
 		Date expiryDate = new Date(System.currentTimeMillis() + 60 * 60 * 1000);
 		String insertTableScript = "INSERT INTO GYM_" + gymId + "(TRAFFIC, EXPIRY) VALUES ('" + traffic + "','"
@@ -59,6 +60,34 @@ public class GymTimeService {
 		int count = jdbcTemplate.queryForObject(countScript, Integer.class);
 		return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(count).build();
 	}
-	
+
+	@GET
+	@Path("/register")
+	@Produces("application/json")
+	public Response register(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
+			@QueryParam("email") String email, @QueryParam("password") String password,
+			@QueryParam("zipCode") String zipCode) {
+
+		String createTableScript = "CREATE TABLE IF NOT EXISTS USER (FIRSTNAME VARCHAR(255), LASTNAME VARCHAR(255), EMAIL VARCHAR(255), PASSWORD VARCHAR(255), ZIPCODE VARCHAR(255))";
+		jdbcTemplate.execute(createTableScript);
+		String insertTableScript = "INSERT INTO USER VALUES ('" + firstName + "','" + lastName + "','" + email + "','"
+				+ password + "','" + zipCode + "');";
+		jdbcTemplate.execute(insertTableScript);
+
+		return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
+	}
+
+	@GET
+	@Path("/login")
+	@Produces("application/json")
+	public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
+
+		String selectPasswordScript = "SELECT PASSWORD FROM USER WHERE EMAIL+" + email + ")";
+		String _password = jdbcTemplate.queryForObject(selectPasswordScript, String.class);
+		if (password.equalsIgnoreCase(_password))
+			return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
+		else
+			return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Invalid Email or Password").build();
+	}
 
 }
