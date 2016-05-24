@@ -62,19 +62,25 @@ public class GymTimeService {
 	}
 
 	@GET
-	@Path("/register")
+	@Path("/signup")
 	@Produces("application/json")
-	public Response register(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
-			@QueryParam("email") String email, @QueryParam("password") String password,
-			@QueryParam("zipCode") String zipCode) {
+	public Response signup(@QueryParam("name") String name, @QueryParam("email") String email,
+			@QueryParam("password") String password) {
 
-		String createTableScript = "CREATE TABLE IF NOT EXISTS USER (FIRSTNAME VARCHAR(255), LASTNAME VARCHAR(255), EMAIL VARCHAR(255), PASSWORD VARCHAR(255), ZIPCODE VARCHAR(255))";
+		String createTableScript = "CREATE TABLE IF NOT EXISTS USER (NAME VARCHAR(255), EMAIL VARCHAR(255), PASSWORD VARCHAR(255));";
+
 		jdbcTemplate.execute(createTableScript);
-		String insertTableScript = "INSERT INTO USER VALUES ('" + firstName + "','" + lastName + "','" + email + "','"
-				+ password + "','" + zipCode + "');";
+		System.out.println(email);
+		String selectEmailScript = "SELECT count(*) FROM USER WHERE USER.EMAIL='" + email + "'";
+		int exists = jdbcTemplate.queryForObject(selectEmailScript, Integer.class);
+		if (exists > 0)
+			return Response.status(200).header("Access-Control-Allow-Origin", "*").entity("Email already exists")
+					.build();
+
+		String insertTableScript = "INSERT INTO USER VALUES ('" + name + "','" + email + "','" + password + "');";
 		jdbcTemplate.execute(insertTableScript);
 
-		return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
+		return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(email).build();
 	}
 
 	@GET
@@ -82,12 +88,13 @@ public class GymTimeService {
 	@Produces("application/json")
 	public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
 
-		String selectPasswordScript = "SELECT PASSWORD FROM USER WHERE EMAIL+" + email + ")";
+		String selectPasswordScript = "SELECT PASSWORD FROM USER WHERE EMAIL=" + email + ")";
 		String _password = jdbcTemplate.queryForObject(selectPasswordScript, String.class);
 		if (password.equalsIgnoreCase(_password))
 			return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
 		else
-			return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Invalid Email or Password").build();
+			return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Invalid Email or Password")
+					.build();
 	}
 
 }
