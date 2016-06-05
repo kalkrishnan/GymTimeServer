@@ -95,19 +95,25 @@ public class GymTimeService {
 	public Response login(@QueryParam("email") String email, @QueryParam("password") String password) {
 		try
 		{
+			System.out.println(email);
 		createUserTable();
 		String selectPasswordScript = "SELECT PASSWORD FROM USER WHERE EMAIL='" + email+"'";
 		String _password = jdbcTemplate.queryForObject(selectPasswordScript, String.class);
 		if (password.equalsIgnoreCase(_password))
 			return Response.status(200).header("Access-Control-Allow-Origin", "*").build();
 		else
-			return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Login Failed: Invalid Email or Password")
-					.build();
-		}catch(DataAccessException e)
 		{
 			return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Login Failed: Invalid Email or Password")
 					.build();
 		}
+		}catch(DataAccessException e)
+		{
+			System.out.println("invalid exception");
+			
+		}
+		System.out.println("invalid exception 2");
+		return Response.status(400).header("Access-Control-Allow-Origin", "*").entity("Login Failed: Invalid Email or Password")
+				.build();
 	}
 
 }
