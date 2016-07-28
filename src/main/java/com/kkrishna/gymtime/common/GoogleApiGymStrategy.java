@@ -32,7 +32,7 @@ public class GoogleApiGymStrategy implements GymStrategy {
 
 	public List<Gym> searchGyms(String location) {
 		try {
-			String url = apiUrl + location + "+gym" + "&key=" + apiKey;
+			String url = apiUrl + location + "&type=gym" + "&key=" + apiKey;
 			return parseGyms(httpClient.getResponse(url));
 
 		} catch (ClientProtocolException e) {
