@@ -1,5 +1,6 @@
 package com.kkrishna.gymtime;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -179,6 +180,24 @@ public class GymTimeService {
 
 		String createTableScript = "CREATE TABLE IF NOT EXISTS USER (USER_ID VARCHAR(255) PRIMARY KEY, NAME VARCHAR(255), EMAIL VARCHAR(255), PASSWORD VARCHAR(255));";
 
+		jdbcTemplate.execute(createTableScript);
+	}
+	
+	@GET
+	@Path("/addComment")
+	@Produces("application/json")
+	public Response addComment(@QueryParam("gymId") String gymId, @QueryParam("userId") String userId, @QueryParam("comment") String comment, @QueryParam("timestamp") String time) {
+
+		System.out.println(GymTimeService.class.getName() + "  Gym Id: " + gymId + " User Id: " + userId);
+		createCommentsTable();
+		String insertTableScript = "INSERT INTO COMMENTS VALUES ('" + gymId + "','" + userId  + "','" + comment + "','" + time+"');";
+		jdbcTemplate.execute(insertTableScript);
+		return Response.status(200).header("Access-Control-Allow-Origin", "*").entity(HTTPMessages.SUCCESS.getMessage())
+				.build();
+	}
+
+	private void createCommentsTable() {
+		String createTableScript = "CREATE TABLE IF NOT EXISTS COMMENTS(GYM_ID VARCHAR(255), USER_ID VARCHAR(255), COMMENT VARCHAR(255), TIME VARCHAR(255))";
 		jdbcTemplate.execute(createTableScript);
 	}
 
