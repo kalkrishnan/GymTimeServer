@@ -1,24 +1,27 @@
 package com.kkrishna.gymtime.dao;
 
-import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import lombok.Builder;
+import lombok.experimental.Tolerate;
+
+@Builder
+@Entity
 public class Gym {
 
-	private final String id;
-	private final String name;
-	private final String address;
-	private final List<Traffic> traffic;
+	@Id
+	private String latLong;
+	private String name;
+	private String address;
+	@ElementCollection(targetClass = Double.class)
+	private List<Double> traffic;
 
-	public Gym(String id, String name, String address, List<Traffic> traffic) {
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.traffic = Collections.unmodifiableList(traffic);
-	}
-
-	public String getId() {
-		return id;
+	@Tolerate
+	Gym() {
 	}
 
 	public String getName() {
@@ -29,8 +32,12 @@ public class Gym {
 		return address;
 	}
 
-	public List<Traffic> getTraffic() {
+	public List<Double> getTraffic() {
 		return traffic;
+	}
+
+	public String getLatLong() {
+		return latLong;
 	}
 
 }

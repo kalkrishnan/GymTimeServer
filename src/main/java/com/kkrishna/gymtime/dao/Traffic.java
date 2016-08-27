@@ -1,6 +1,28 @@
 package com.kkrishna.gymtime.dao;
 
-public interface Traffic {
+import javax.persistence.Embeddable;
 
-	public double getHowHeavyTrafficIs();
+import lombok.Builder;
+import lombok.experimental.Tolerate;
+
+@Builder
+@Embeddable
+public class Traffic {
+
+	private String type;
+	private double trafficStrength;
+
+	@Tolerate
+	Traffic() {
+
+	}
+
+	public double getTrafficStrength() {
+		return trafficStrength;
+	}
+
+	public String getType() {
+		return type;
+	}
+
 }

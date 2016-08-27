@@ -13,9 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.kkrishna.gymtime.dao.GeneralTraffic;
 import com.kkrishna.gymtime.dao.Gym;
-import com.kkrishna.gymtime.dao.Traffic;
 import com.kkrishna.gymtime.util.GymTimeHttpClient;
 
 @Component
@@ -61,18 +59,18 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	private Gym parseGym(JsonObject gymJson) {
 		String address = gymJson.get("formatted_address").toString().replace("\"", "").replace(", United States", "");
 		JsonObject locationObject = gymJson.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-		String id = locationObject.get("lat").getAsString() + "_" + locationObject.get("lng").getAsString();
+		String latlong = locationObject.get("lat").getAsString() + "_" + locationObject.get("lng").getAsString();
 		String name = gymJson.get("name").toString().replace("\"", "");
-		return new Gym(id, name, address, new ArrayList<Traffic>() {
+		return Gym.builder().latLong(latlong).name(name).address(address).traffic(new ArrayList<Double>() {
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = -1056301818528097868L;
 
 			{
-				add(new GeneralTraffic(0.6));
+				add(0.6);
 			}
-		});
+		}).build();
 	}
 
 }
