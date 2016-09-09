@@ -23,13 +23,15 @@ jar {
 repositories {
     mavenCentral()
 }
-
+configurations {
+    compile.exclude module: "tomcat-embed-websocket"
+}
 
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
     compile("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
+       exclude module: "tomcat-embed-websocket"
     }
     compile("org.springframework:spring-jdbc")
     compile("org.springframework.boot:spring-boot-starter-jetty")
@@ -38,7 +40,6 @@ dependencies {
     compile("org.jsoup:jsoup:1.7.2")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-data-rest")
-     
     compile("com.h2database:h2")
     // end::jetty[]
     // tag::actuator[]
@@ -48,6 +49,8 @@ dependencies {
     // Utilities
     compile 'com.google.guava:guava:18.0'
     compile("org.projectlombok:lombok:1.16.10")
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework:spring-messaging")
     // AssertJ
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
