@@ -20,7 +20,10 @@ import com.kkrishna.gymtime.util.GymTimeHttpClient;
 public class GoogleApiGymStrategy implements GymStrategy {
 
 	@Value("${gymtime.googleapiurl}")
-	String apiUrl;
+	String apiLocationUrl;
+
+	@Value("${gymtime.googleapilatlongurl}")
+	String apiLatLongUrl;
 
 	@Value("${gymtime.googleapikey}")
 	String apiKey;
@@ -30,7 +33,21 @@ public class GoogleApiGymStrategy implements GymStrategy {
 
 	public List<Gym> searchGyms(String location) {
 		try {
-			String url = apiUrl + location + "&type=gym" + "&key=" + apiKey;
+			String url = apiLocationUrl + location + "&type=gym" + "&key=" + apiKey;
+			return parseGyms(httpClient.getResponse(url));
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public List<Gym> searchGyms(String latLong, String radius) {
+		try {
+			String url = apiLatLongUrl + latLong.replace("_", ",") + "&radius=" + radius + "&type=gym" + "&key="
+					+ apiKey;
 			return parseGyms(httpClient.getResponse(url));
 
 		} catch (ClientProtocolException e) {
@@ -59,7 +76,8 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	private Gym parseGym(JsonObject gymJson) {
 		String address = gymJson.get("formatted_address").toString().replace("\"", "").replace(", United States", "");
 		JsonObject locationObject = gymJson.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-		String latlong = locationObject.get("lat").getAsString() + "_" + locationObject.get("lng").getAsString();
+		String latlong = String.format("%.2f", locationObject.get("lat").getAsFloat()) + "_"
+				+ String.format("%.2f", locationObject.get("lng").getAsFloat());
 		String name = gymJson.get("name").toString().replace("\"", "");
 		return Gym.builder().latLong(latlong).name(name).address(address).traffic(new ArrayList<Double>() {
 			/**

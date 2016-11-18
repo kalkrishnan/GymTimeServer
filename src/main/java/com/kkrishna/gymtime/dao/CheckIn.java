@@ -1,9 +1,15 @@
 package com.kkrishna.gymtime.dao;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 import lombok.Builder;
 import lombok.experimental.Tolerate;
@@ -13,10 +19,17 @@ import lombok.experimental.Tolerate;
 public class CheckIn {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long Id;
+	@Expose
 	private String gymId;
+	@Expose
 	private String userId;
+	@Expose
 	private String traffic;
-	private Timestamp checkInTime;
+	@Expose
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime checkInTime;
 
 	@Tolerate
 	CheckIn() {
@@ -35,8 +48,13 @@ public class CheckIn {
 		return gymId;
 	}
 
-	public Timestamp getCheckInTime() {
+	public DateTime getCheckInTime() {
 		return checkInTime;
+	}
+
+	@Override
+	public String toString() {
+		return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
 	}
 
 }

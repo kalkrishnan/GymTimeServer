@@ -16,8 +16,6 @@ public class CommentsEventHandler {
 	private SimpMessagingTemplate gymTimePushClient;
 
 	@HandleAfterCreate(Comment.class)
-	// @MessageMapping("/messages")
-	// @SendTo("/topic/comments")
 	public void handleCommentSave(Comment comment) {
 		this.gymTimePushClient.convertAndSend("/topic/comments/"+comment.getGymId(), comment.toString());
 	}

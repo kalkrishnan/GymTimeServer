@@ -51,6 +51,14 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.10")
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework:spring-messaging")
+    compile ("joda-time:joda-time:2.9.4")
+    compile ("org.jadira.usertype:usertype.core:5.0.0.GA")
+    compile ("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.3")
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+    compile 'com.google.apis:google-api-services-calendar:v3-rev212-1.22.0'
+    
+    
     // AssertJ
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
