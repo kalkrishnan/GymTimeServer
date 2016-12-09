@@ -3,12 +3,16 @@ package com.kkrishna.gymtime.common;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.concurrent.Immutable;
 
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -79,16 +83,12 @@ public class GoogleApiGymStrategy implements GymStrategy {
 		String latlong = String.format("%.2f", locationObject.get("lat").getAsFloat()) + "_"
 				+ String.format("%.2f", locationObject.get("lng").getAsFloat());
 		String name = gymJson.get("name").toString().replace("\"", "");
-		return Gym.builder().latLong(latlong).name(name).address(address).traffic(new ArrayList<Double>() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -1056301818528097868L;
+		return Gym.builder().latLong(latlong).name(name).address(address).traffic(sampleTraffic()).build();
+	}
 
-			{
-				add(0.6);
-			}
-		}).build();
+	private Map<Integer, Integer> sampleTraffic() {
+		return ImmutableMap.<Integer, Integer> builder().put(1, 1).put(2, 2).put(3, 3).put(4, 4).put(5, 5).put(6, 6)
+				.build();
 	}
 
 }

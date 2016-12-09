@@ -11,6 +11,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 
 import com.kkrishna.gymtime.dao.Gym;
 import com.kkrishna.gymtime.dao.User;
@@ -23,6 +24,11 @@ public class GymTimeConfiguration extends RepositoryRestConfigurerAdapter {
 	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 		config.exposeIdsFor(User.class);
 		config.exposeIdsFor(Gym.class);
+	}
+
+	@Bean
+	public HibernateJpaSessionFactoryBean sessionFactory() {
+		return new HibernateJpaSessionFactoryBean();
 	}
 
 	@Override

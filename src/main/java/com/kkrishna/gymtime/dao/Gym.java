@@ -1,6 +1,6 @@
 package com.kkrishna.gymtime.dao;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -17,8 +17,8 @@ public class Gym {
 	private String latLong;
 	private String name;
 	private String address;
-	@ElementCollection(targetClass = Double.class)
-	private List<Double> traffic;
+	@ElementCollection
+	private Map<Integer, Integer> traffic;
 
 	@Tolerate
 	Gym() {
@@ -32,7 +32,7 @@ public class Gym {
 		return address;
 	}
 
-	public List<Double> getTraffic() {
+	public Map<Integer, Integer> getTraffic() {
 		return traffic;
 	}
 
