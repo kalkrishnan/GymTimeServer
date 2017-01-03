@@ -9,20 +9,21 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.api.services.calendar.model.Event;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kkrishna.gymtime.common.CalendarApi;
 import com.kkrishna.gymtime.common.GymStrategy;
 import com.kkrishna.gymtime.common.GymStrategyGenerator;
-import com.kkrishna.gymtime.dao.CheckIn;
 import com.kkrishna.gymtime.dao.CheckInRepository;
 import com.kkrishna.gymtime.dao.Gym;
 import com.kkrishna.gymtime.dao.GymRepository;
+import com.kkrishna.gymtime.dao.User;
+import com.kkrishna.gymtime.dao.UserRepository;
 
 @RestController
 public class GymTimeService {
@@ -38,6 +39,9 @@ public class GymTimeService {
 
 	@Autowired
 	GymRepository gymRepo;
+
+	@Autowired
+	UserRepository userRepo;
 
 	Gson gson = new GsonBuilder().create();
 	com.google.api.services.calendar.Calendar service = CalendarApi.getCalendarService();
@@ -60,43 +64,34 @@ public class GymTimeService {
 		return strategy.searchGyms(latLong, radius);
 	}
 
-	@RequestMapping("/checkIn")
-	public void checkIn(@RequestParam(value = "checkInTime") String checkInTime,
-			@RequestParam(value = "userId") String userId, @RequestParam(value = "gymId") String gymId,
-			@RequestParam(value = "gymName") String gymName, @RequestParam(value = "traffic") String traffic) {
-		// List the next 10 events from the primary calendar.
-		Event event = new Event().setLocation(gymName).setDescription("Checking into " + gymName);
+	// @RequestMapping("/checkIn")
+	// public void checkIn(@RequestParam(value = "checkInTime") String
+	// checkInTime,
+	// @RequestParam(value = "userId") String userId, @RequestParam(value =
+	// "gymId") String gymId,
+	// @RequestParam(value = "gymName") String gymName, @RequestParam(value =
+	// "traffic") String traffic) {
+	// // List the next 10 events from the primary calendar.
+	// Event event = new Event().setLocation(gymName).setDescription("Checking
+	// into " + gymName);
+	//
+	// org.joda.time.DateTime startDateTime = new
+	// org.joda.time.DateTime(checkInTime);
+	// checkInRepo.save(
+	// CheckIn.builder().checkInTime(startDateTime).gymId(gymId).userId(userId).traffic(traffic).build());
+	// Gym gym = gymRepo.findOne(gymId);
+	// Calendar checkInDate = Calendar.getInstance();
+	// checkInDate.setTimeInMillis(startDateTime.getMillis());
+	// System.out.println("Test:*********************"+Integer.toString(new
+	// org.joda.time.DateTime().getHourOfDay()));
+	// gymRepo.save(Gym.builder().address(gym.getAddress()).name(gym.getName()).latLong(gym.getLatLong())
+	// .traffic(updateGymTraffic(gym, checkInDate)).build());
+	// }
 
-		// DateTime startDateTime = new DateTime(checkInTime);
-		// EventDateTime start = new EventDateTime().setDateTime(startDateTime);
-		// event.setStart(start);
-		// EventAttendee[] attendees = new EventAttendee[] { new
-		// EventAttendee().setEmail(userId), };
-		// event.setAttendees(Arrays.asList(attendees));
-		//
-		// EventReminder[] reminderOverrides = new EventReminder[] {
-		// new EventReminder().setMethod("email").setMinutes(60) };
-		// Event.Reminders reminders = new
-		// Event.Reminders().setUseDefault(false)
-		// .setOverrides(Arrays.asList(reminderOverrides));
-		// event.setReminders(reminders);
-		//
-		// String calendarId = "primary";
-		// try {
-		// event = service.events().insert(calendarId, event).execute();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+	@RequestMapping("/addToFavorites")
+	public void addToFavorites(@RequestBody User user) {
 
-		org.joda.time.DateTime startDateTime = new org.joda.time.DateTime(checkInTime);
-		checkInRepo.save(
-				CheckIn.builder().checkInTime(startDateTime).gymId(gymId).userId(userId).traffic(traffic).build());
-		Gym gym = gymRepo.findOne(gymId);
-		Calendar checkInDate = Calendar.getInstance();
-		checkInDate.setTimeInMillis(startDateTime.getMillis());
-		gymRepo.save(Gym.builder().address(gym.getAddress()).name(gym.getName()).latLong(gym.getLatLong())
-				.traffic(updateGymTraffic(gym, checkInDate)).build());
+		userRepo.save(user).toString();
 	}
 
 	@Async
