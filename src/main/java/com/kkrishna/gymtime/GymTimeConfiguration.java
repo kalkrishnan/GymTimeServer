@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 
 import com.kkrishna.gymtime.dao.Gym;
 import com.kkrishna.gymtime.dao.User;
-import com.kkrishna.gymtime.dao.UserInlineFavorites;
+import com.kkrishna.gymtime.dao.UserInline;
 import com.kkrishna.gymtime.dao.events.CommentsEventHandler;
 
 @Configuration
@@ -25,7 +25,7 @@ public class GymTimeConfiguration extends RepositoryRestConfigurerAdapter {
 	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 		config.exposeIdsFor(User.class);
 		config.exposeIdsFor(Gym.class);
-		config.getProjectionConfiguration().addProjection(UserInlineFavorites.class, User.class);
+		config.getProjectionConfiguration().addProjection(UserInline.class, User.class);
 	}
 
 	@Bean

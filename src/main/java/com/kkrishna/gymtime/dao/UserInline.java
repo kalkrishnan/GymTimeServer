@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.rest.core.config.Projection;
 
-@Projection(name = "inlineFavorites", types = { User.class })
-public interface UserInlineFavorites {
+@Projection(name = "userInline", types = { User.class })
+public interface UserInline {
 
 	public String getName() ;
 
@@ -14,4 +14,6 @@ public interface UserInlineFavorites {
 	public String getPassword() ;
 
 	public List<Gym> getFavorites() ;
+	
+	public List<Alert> getAlerts() ;
 }

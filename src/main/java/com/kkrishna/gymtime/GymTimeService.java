@@ -88,8 +88,8 @@ public class GymTimeService {
 	// .traffic(updateGymTraffic(gym, checkInDate)).build());
 	// }
 
-	@RequestMapping("/addToFavorites")
-	public void addToFavorites(@RequestBody User user) {
+	@RequestMapping("/updateUser")
+	public void updateUser(@RequestBody User user) {
 
 		userRepo.save(user).toString();
 	}
