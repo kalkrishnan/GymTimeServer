@@ -53,6 +53,6 @@ public class User {
 
 	@Override
 	public String toString() {
-		return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(this);
+		return new GsonBuilder().create().toJson(this);
 	}
 }

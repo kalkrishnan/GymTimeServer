@@ -6,6 +6,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.google.gson.GsonBuilder;
+
 import lombok.Builder;
 import lombok.experimental.Tolerate;
 

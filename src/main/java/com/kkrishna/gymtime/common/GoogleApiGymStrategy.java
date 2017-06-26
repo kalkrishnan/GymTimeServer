@@ -35,9 +35,11 @@ public class GoogleApiGymStrategy implements GymStrategy {
 	@Autowired
 	private GymTimeHttpClient httpClient;
 
-	public List<Gym> searchGyms(String location) {
+	public List<Gym> searchGyms(String location, int radius, String keyword, String type) {
 		try {
-			String url = apiLocationUrl + location + "&type=gym" + "&key=" + apiKey;
+			String url = apiLocationUrl + keyword + "&type="+type + "&radius=" + radius + "&location=" + location +"&key=" + apiKey;
+			System.out.println(url);
+
 			return parseGyms(httpClient.getResponse(url));
 
 		} catch (ClientProtocolException e) {
@@ -50,7 +52,7 @@ public class GoogleApiGymStrategy implements GymStrategy {
 
 	public List<Gym> searchGyms(String latLong, String radius) {
 		try {
-			String url = apiLatLongUrl + latLong.replace("_", ",") + "&radius=" + radius + "&type=gym" + "&key="
+			String url = apiLatLongUrl + latLong.replace("_", ",") + "&radius=" + radius + "&type=establishment" + "&key="
 					+ apiKey;
 			return parseGyms(httpClient.getResponse(url));
 
